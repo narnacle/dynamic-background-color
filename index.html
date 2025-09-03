@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Background Color</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.5s ease;
+            padding: 20px;
+            background-color: #3498db; /* Default color */
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .color-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        
+        .color-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+        
+        .color-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: monospace;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .instructions {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        code {
+            background-color: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .example-link {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e4e4e4;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+        }
+        
+        .example-link:hover {
+            background-color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .default-message {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .obs-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ccc;
+        }
+        
+        .obs-info {
+            background-color: #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .warning {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Background Color</h1>
+        
+        <div class="color-box">
+            <div class="color-preview" id="colorPreview"></div>
+            <div class="color-value" id="colorValue">#3498db</div>
+        </div>
+        
+        <p>This page's background changes based on the URL parameter.</p>
+        
+        <div class="warning">
+            <p><strong>Important:</strong> When using hex codes with a <code>#</code> symbol, you need to URL encode it as <code>%23</code>.</p>
+            <p>Example: <code>?c=%237e3f14</code> instead of <code>?c=#7e3f14</code></p>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>How to use:</strong></p>
+            <p>Add a color parameter to the URL in one of these formats:</p>
+            <ul>
+                <li>Hex code (without #): <code>?c=7e3f14</code></li>
+                <li>Hex code (with encoded #): <code>?c=%237e3f14</code></li>
+                <li>Color name: <code>?c=blue</code> or <code>?c=darkcyan</code></li>
+            </ul>
+            
+            <p>Try these examples:</p>
+            <div class="examples">
+                <a href="?c=7e3f14" class="example-link">?c=7e3f14</a>
+                <a href="?c=%237e3f14" class="example-link">?c=%237e3f14</a>
+                <a href="?c=ff5733" class="example-link">?c=ff5733</a>
+                <a href="?c=0f0" class="example-link">?c=0f0</a>
+                <a href="?c=blue" class="example-link">?c=blue</a>
+                <a href="?c=darkcyan" class="example-link">?c=darkcyan</a>
+            </div>
+        </div>
+        
+        <div class="obs-section">
+            <h2>OBS Users</h2>
+            <p>To show only the background in OBS (hide this content panel):</p>
+            <div class="obs-info">
+                <p>Add this CSS override in your browser source settings:</p>
+                <code>.container { display: none; }</code>
+            </div>
+        </div>
+        
+        <p id="defaultMessage" class="default-message">No valid color parameter detected. Using default blue.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the color parameter from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let colorParam = urlParams.get('c');
+            
+            let backgroundColor = '#3498db'; // Default color
+            let displayValue = backgroundColor;
+            let hasValidColor = false;
+            
+            // If we have a color parameter, process it
+            if (colorParam) {
+                // Handle URL-encoded # (%23)
+                if (colorParam.startsWith('%23')) {
+                    colorParam = '#' + colorParam.substring(3);
+                }
+                
+                // If it starts with #, treat as hex code
+                if (colorParam.startsWith('#')) {
+                    const hexValue = colorParam.substring(1);
+                    // Check if it's a valid hex code (3 or 6 characters, hexadecimal)
+                    if (/^[0-9A-F]{3}$/i.test(hexValue) || /^[0-9A-F]{6}$/i.test(hexValue)) {
+                        backgroundColor = colorParam;
+                        displayValue = colorParam;
+                        hasValidColor = true;
+                    }
+                } 
+                // Otherwise, check if it's a valid hex code without #
+                else if (/^[0-9A-F]{3}$/i.test(colorParam) || /^[0-9A-F]{6}$/i.test(colorParam)) {
+                    backgroundColor = '#' + colorParam;
+                    displayValue = '#' + colorParam;
+                    hasValidColor = true;
+                }
+                // Otherwise, check if it's a valid color name
+                else {
+                    // Create a temporary element to check if the color name is valid
+                    const tempElement = document.createElement('div');
+                    tempElement.style.color = 'transparent'; // Start with transparent
+                    document.body.appendChild(tempElement);
+                    
+                    // Try to set the color
+                    tempElement.style.color = colorParam;
+                    
+                    // Check if the browser recognized the color
+                    const computedColor = getComputedStyle(tempElement).color;
+                    if (computedColor !== 'rgba(0, 0, 0, 0)') { // If not transparent
+                        backgroundColor = colorParam;
+                        displayValue = colorParam;
+                        hasValidColor = true;
+                    }
+                    
+                    document.body.removeChild(tempElement);
+                }
+            }
+            
+            // Apply the background color
+            document.body.style.backgroundColor = backgroundColor;
+            document.getElementById('colorPreview').style.backgroundColor = backgroundColor;
+            document.getElementById('colorValue').textContent = displayValue;
+            
+            // Show/hide default message
+            if (hasValidColor) {
+                document.getElementById('defaultMessage').style.display = 'none';
+            } else {
+                document.getElementById('defaultMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
