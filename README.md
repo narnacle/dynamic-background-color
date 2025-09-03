@@ -25,5 +25,17 @@ A simple HTML page that changes its background color based on URL parameters. Pe
 To show only the background color in OBS:
 1. Add the page as a Browser Source
 2. Add this CSS override in the source properties:
-   ```css
+
+```css
    .container { display: none; }
+```
+## Examples
+
+- [Blue background](narnacle.github.io/dynamic-background-color/?c=blue)
+- [Red background](narnacle.github.io/dynamic-background-color/?c=ff0000)
+- [Green background](narnacle.github.io/dynamic-background-color/?c=%2300ff00)
+- [Dark cyan background](narnacle.github.io/dynamic-background-color/?c=darkcyan)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
