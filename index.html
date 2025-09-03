@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Background Color</title>
     <style>
-        * {
+        /* Prevent scrollbars in all scenarios */
+        html, body {
+            overflow: hidden !important;
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        * {
             box-sizing: border-box;
         }
         
@@ -178,6 +185,7 @@
                 <p>Add this CSS override in your browser source settings:</p>
                 <code>.container { display: none; }</code>
             </div>
+            <p><strong>Scrollbar Fix:</strong> This page now includes code to prevent scrollbars from appearing when making the browser source small.</p>
         </div>
         
         <p id="defaultMessage" class="default-message">No valid color parameter detected. Using default blue.</p>
@@ -249,6 +257,16 @@
             } else {
                 document.getElementById('defaultMessage').style.display = 'block';
             }
+            
+            // Additional scrollbar prevention
+            window.addEventListener('resize', function() {
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Force hide scrollbars on load
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
         });
     </script>
 </body>
