@@ -31,10 +31,10 @@ To show only the background color in OBS:
 ```
 ## Examples
 
-- [Blue background](narnacle.github.io/dynamic-background-color/?c=blue)
-- [Red background](narnacle.github.io/dynamic-background-color/?c=ff0000)
-- [Green background](narnacle.github.io/dynamic-background-color/?c=%2300ff00)
-- [Dark cyan background](narnacle.github.io/dynamic-background-color/?c=darkcyan)
+- [Blue background](https://narnacle.github.io/dynamic-background-color/?c=blue)
+- [Red background](https://narnacle.github.io/dynamic-background-color/?c=ff0000)
+- [Green background](https://narnacle.github.io/dynamic-background-color/?c=%2300ff00)
+- [Dark cyan background](https://narnacle.github.io/dynamic-background-color/?c=darkcyan)
 
 ## License
 
